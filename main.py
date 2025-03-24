@@ -109,13 +109,14 @@ class Sprite:
         self.defaultHeight = defaultHeight
         self.imgPath = imgPath
         self.image = pygame.image.load(imgPath)
-        
+
+        logger.info(f"Sprite {name} has been initialized")
+    def changeZoomMultiplier(self, multiplier: int):
         # Apply zoomMultiplier when initializing
         self.width = int(self.image.get_width() * zoomMultiplier)
         self.height = int(self.image.get_height() * zoomMultiplier)
         self.image = pygame.transform.scale(self.image, (self.width, self.height))
-        
-        logger.info(f"Sprite {name} has been initialized")
+    def blit(self):
         screen.blit(self.image, (x, y))
 
 
@@ -182,12 +183,11 @@ logger.info('Game initialized, starting')
 
 # define game functions
 
-def updateZoomMultiplier():
+def updateZoomMultiplier(multiplier):
     global sprites  # Ensure we're modifying the global sprite list
     for sprite in sprites:
-        sprite.width = int(sprite.image.get_width() * zoomMultiplier)
-        sprite.height = int(sprite.image.get_height() * zoomMultiplier)
-        sprite.image = pygame.transform.scale(sprite.image, (sprite.width, sprite.height))
+        sprite.changeZoomMultiplier(multiplier)
+        sprite.blit()
 
 def getLocalVarName(var):
     for name, value in locals().items():
