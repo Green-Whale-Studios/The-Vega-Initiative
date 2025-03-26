@@ -123,6 +123,24 @@ class Sprite:
         screen.blit(self.image, (x, y))
 
 
+class Sprite:
+    def __init__(self, name: str, reference: hex, defaultHeight: int, imgPath: str, x: int, y: int):
+        self.name = name
+        self.reference = reference
+        self.defaultHeight = defaultHeight
+        self.imgPath = imgPath
+        self.image = pygame.image.load(imgPath)
+
+        logger.info(f"Sprite {name} has been initialized")
+    def changeZoomMultiplier(self, multiplier: int):
+        # Apply zoomMultiplier when initializing
+        self.width = int(self.image.get_width() * zoomMultiplier)
+        self.height = int(self.image.get_height() * zoomMultiplier)
+        self.image = pygame.transform.scale(self.image, (self.width, self.height))
+    def blit(self):
+        screen.blit(self.image, (x, y))
+
+
 class Citizen:
     def __init__(self, reference: hex, name: str, happiness: float = 100, health: float = 100, age: float = 0, productivity: float = 0, home:Home = None):
         self.name = name
