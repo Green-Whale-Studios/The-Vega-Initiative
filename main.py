@@ -16,33 +16,36 @@ class SaveError(Exception):
 
 # define game object classes
 
-class Material:
+class Material: # parent class for all materials
     def __init__(self, name:str, quantity:int):
         self.name = name
         self.quantity = quantity
         materials.append(self)
     
     def add(self, quantity):
+        # adds a quantity of material to the material
         self.quantity += quantity
 
     def canuUse(self, quantity):
+        # checks if there is enough material to use
         if self.quantity >= quantity:
             return True
         else:
             return False
         
     def use(self, quantity):
+        # uses a quantity of material
         if self.canuUse(quantity):
             return True
         else:
             return False
 
-class PrimaryMaterial(Material):
+class PrimaryMaterial(Material): # primary material ie. a material that doesnt need to b processed
     def __init__(self, name:str, quantity:int, productionRate:int):
         self.name = name
         self.quantity = quantity
 
-class SecondaryMaterial(Material):
+class SecondaryMaterial(Material): # secondary material ie. a material that needs to be processed
     def __init__(self, name:str, quantity:int, requiredMaterials:dict):
         self.name = name
         self.quantity = quantity
@@ -56,14 +59,14 @@ class SecondaryMaterial(Material):
                 raise MaterialException("Not enough materials to make this item")
         self.add(1)
 
-class Building:
+class Building: # parent class for all buildings
     def __init__(self, reference:hex, name:str, width:int, height:int):
         self.name = name
         self.width = width
         self.height = height
         self.reference = reference
 
-class Workplace(Building):
+class Workplace(Building): # a building where citizens work
     def __init__(self, reference:hex, name:str, width:int, height:int, productionMaterial:Material, maxWorkers:int, productionRate:int, productionQuantity:int, workers:list=[]):
         self.name = name
         self.width = width
@@ -81,7 +84,7 @@ class Workplace(Building):
         else:
             self.productionMaterial.add(self.productionQuantity*(self.workers/self.maxWorkers))
 
-class Home(Building):
+class Home(Building): # a building where citizens live
     def __init__(self, reference:hex, name:int, width:int, height:int, maxResidents:int, residents:list=[]):
         self.name = name
         self.width = width
@@ -101,6 +104,24 @@ class Home(Building):
             self.residents.remove(resident)
         else:
             raise BuildingException("Resident not found")
+            
+class Sprite:
+    def __init__(self, name: str, reference: hex, defaultHeight: int, imgPath: str, x: int, y: int):
+        self.name = name
+        self.reference = reference
+        self.defaultHeight = defaultHeight
+        self.imgPath = imgPath
+        self.image = pygame.image.load(imgPath)
+
+        logger.info(f"Sprite {name} has been initialized")
+    def changeZoomMultiplier(self, multiplier: int):
+        # Apply zoomMultiplier when initializing
+        self.width = int(self.image.get_width() * zoomMultiplier)
+        self.height = int(self.image.get_height() * zoomMultiplier)
+        self.image = pygame.transform.scale(self.image, (self.width, self.height))
+    def blit(self):
+        screen.blit(self.image, (x, y))
+
 
 class Sprite:
     def __init__(self, name: str, reference: hex, defaultHeight: int, imgPath: str, x: int, y: int):
@@ -139,11 +160,11 @@ class Citizen:
         # Use A* Algorithm to pathfind
         print(f"Moving {self.name} to {destination}")
 
-class StatusWorker:
+class StatusWorker: # a status for a worker
     def __init__(self, name:str):
         self.name = name
 
-class Worker(Citizen):
+class Worker(Citizen): # a worker citizen
     def __init__(self, reference: hex, name: str, status: 'StatusWorker', home:Home = None, workplace:Workplace = None, happiness: float = 100, health: float = 100, age: float = 0, productivity: float = 0):
         super().__init__(reference, name, happiness, health, age, productivity, home)
         self.workplace = workplace

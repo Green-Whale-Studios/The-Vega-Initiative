@@ -1,55 +1,47 @@
-import heapq
+# a very bad pathfinding library
 
-class Node:
-    def __init__(self, x, y, g=0, h=0):
-        self.x = x
-        self.y = y
-        self.g = g  
-        self.h = h  
-        self.f = g + h  
-        self.parent = None
+class PathfindingError(Exception)
 
-    def __lt__(self, other):
-        return self.f < other.f  
+def findPath(start:tuple,end:tuple,*blocked:list): # uses an *args decorator to accept an unlimited number of non-positional arguments
+  blockedCoords = [] # create a list with all the blocked coords
+  for blockedList in blocked:
+    blockedCoords.extend(blockedList)
 
-def heuristic(a, b):
-    """Uses Manhattan distance for grid-based movement."""
-    return abs(a.x - b.x) + abs(a.y - b.y)
+  movementVector = [end[0]-start[0], end[1]-start[1]] # define a movementVector based on a move right, up strategy directly between the points
+  pathFound = False # then create a variable to track if we have found a path yet
 
-def astar(grid, start, goal):
-    """Finds the shortest path from start (x1, y1) to goal (x2, y2)."""
-    open_list = []
-    closed_set = set()
+  while not pathFound:
+    movementCoords = [start]
+    movementCoordsItem = 0
+    for x in range(1,movementVector[0]+1):
+      movementCoords.append(tuple(movementCoords[movementCoordsItem][0]+1,movementCoords[movementCoordsItem][1]))
+      movementCoordsItem += 1
+    for y in range(1,movementVector[1]+1):
+      movementCoords.append(tuple(movementCoords[movementCoordsItem][0],movementCoords[movementCoordsItem][1]+1))
 
-    start_node = Node(*start)
-    goal_node = Node(*goal)
+    # now we should have a list of the coords the player will traverse using the movementVector
+
+    # check if it works
+    pathWorks = True
     
-    heapq.heappush(open_list, start_node)
+    for coord in movementCoords:
+      if coord in blockedCoords:
+        pathWorks = False
+        # fix the error
+        coordIndex = movementCoords.index(coord)
+        movementCoords.pop(coordIndex)
+        movementCoords.insert(tuple(coord[0]-1,coord[1]-1))
+        break
 
-    directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]  
+    if pathWorks:
+      pathFound = True
+      break
 
-    while open_list:
-        current = heapq.heappop(open_list)
+  if pathFound:
+    return movementVector
+  else:
+    raise PathfindingError('Vector was not verified')
+    
 
-        if (current.x, current.y) == (goal_node.x, goal_node.y):
-            path = []
-            while current:
-                path.append((current.x, current.y))
-                current = current.parent
-            return path[::-1]  
-
-        closed_set.add((current.x, current.y))
-
-        for dx, dy in directions:
-            x, y = current.x + dx, current.y + dy
-
-            if 0 <= x < len(grid) and 0 <= y < len(grid[0]) and grid[x][y] == 0:  
-                if (x, y) in closed_set:
-                    continue
-
-                neighbor = Node(x, y, current.g + 1, heuristic(Node(x, y), goal_node))
-                neighbor.parent = current
-
-                heapq.heappush(open_list, neighbor)
-
-    return None  
+    
+  
