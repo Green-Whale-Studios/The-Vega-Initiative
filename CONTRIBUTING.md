@@ -15,6 +15,9 @@ If you are working on an issue, please comment saying so, so that we are aware.
 
 All issues will be reviewed and divided among our dev team, so if you wish to work on an issue, please ping the Vega Initiative dev team in a comment on said issue, and let us know your estimated timeframe for your changes to be completed - if this timeframe is acceptable we will let you know and will ask for updates regularly. Note that failure to provide updates can result in your pull request being ignored in favour of changes made already by our team.
 
+## Comments
+All comments should follow our code of conduct. It is accaptable to write in bullet points not full sentences but always be polite and preferably competent to understand what you are saying.
+
 ### I don't like these guidelines!
 Tough
 
