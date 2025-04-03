@@ -2,13 +2,5 @@
 
 A 2D city builder on an alien planet. Coded in Pygame-ce and rendered for web in Pygbag.
 
-## Link to pages:
-
-### Main Branch:
-
-https://green-whale-studios.github.io/The-Vega-Initiative/
-
-### Dev Branch:
-
-Must be manually run locally (see localhost.md)
+For further information, look at our wiki: https://github.com/Green-Whale-Studios/The-Vega-Initiative/wiki.
 
