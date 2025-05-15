@@ -15,6 +15,6 @@ pyscript==0.3.3
 requests==2.32.3
 rich==14.0.0
 toml==0.10.2
-typer==0.15.2
+typer==0.15.4
 typing_extensions==4.13.2
 urllib3==2.4.0
